@@ -462,6 +462,7 @@
 		<option value="isSupplier">Supplier</option>
 		<option value="isCarrier">Carrier</option>
 		<option value="isFactor">Factor</option>
+		<option value="isEmployee">Employee</option>
 	</selection>
 	
 	<selection name='iaccount.move.functional.origin.select'>
@@ -561,5 +562,10 @@
         <option value="2">Cash</option>
         <option value="3">Bill of Exchange</option>
     </selection>
+    
+    <selection name="account.financial.discount.discount.base.select">
+	   <option value="0">Tax excluded</option>
+	   <option value="1">Tax included</option>
+  </selection>
 
 </object-views>
