@@ -124,9 +124,6 @@ public class SaleOrderLineServiceImpl implements SaleOrderLineService {
   public void computeProductInformation(SaleOrderLine saleOrderLine, SaleOrder saleOrder)
       throws AxelorException {
 
-    // Reset fields which are going to recalculate in this method
-    resetProductInformation(saleOrderLine);
-
     if (!saleOrderLine.getEnableFreezeFields()) {
       saleOrderLine.setProductName(saleOrderLine.getProduct().getName());
     }
