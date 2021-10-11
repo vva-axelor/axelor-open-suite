@@ -58,7 +58,11 @@
     <panel name="specificNotesPanel" title="Specific notes" colSpan="12" if-module="axelor-account">
       <field name="specificNoteOnInvoice" widget="html" colSpan="12" />
     </panel>
-  </form>
+  <panel-mail name="mailPanel">
+			<mail-messages limit="4" />
+			<mail-followers />
+		</panel-mail>
+	</form>
 
   <cards name="bank-details-cards" model="com.axelor.apps.base.db.BankDetails" title="Bank details" width="410px">
     <toolbar>
@@ -217,11 +221,11 @@
     <field name="balance" hidden="true" if="!__config__.app.isApp('bank-payment')" />
     <field name="balanceUpdatedDate" hidden="true" if="!__config__.app.isApp('bank-payment')" />
   </search-filters>
-  
+
   <search-filters name="bank-statement-line-afb-120-filters" model="com.axelor.apps.bankpayment.db.BankStatementLineAFB120" title="Bank statement line AFK120 filters" >
     <filter title="Balance" name="initial-final-balance-bank-statement-line-afb-120" >
       <domain>self.lineTypeSelect = 1 OR self.lineTypeSelect = 3</domain>
-    </filter>    
+    </filter>
     <filter title="Movement" name="movement-bank-statement-line-afb-120" >
       <domain>self.lineTypeSelect = 2</domain>
     </filter>
