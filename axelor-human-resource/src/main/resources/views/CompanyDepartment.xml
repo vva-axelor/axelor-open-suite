@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.0.xsd">
+
+  <form name="company-department-form" title="Company department"
+    model="com.axelor.apps.base.db.CompanyDepartment" id="hr-company-department-form"
+    extension="true">
+    <extend target="//field[@name='company']">
+      <insert position="after">
+        <field name="headOfDepartment" onSelect="action-company-department-attrs-set-domain"/>
+      </insert>
+    </extend>
+  </form>
+
+  <form name="company-department-company-form" title="Company department"
+    model="com.axelor.apps.base.db.CompanyDepartment" id="hr-company-department-company-form"
+    extension="true">
+    <extend target="//field[@name='name']">
+      <insert position="after">
+        <field name="headOfDepartment" onSelect="action-company-department-attrs-set-domain"/>
+      </insert>
+    </extend>
+  </form>
+
+  <action-attrs name="action-company-department-attrs-set-domain">
+    <attribute name="domain" for="headOfDepartment"
+      expr="eval: &quot; self.mainEmploymentContract.payCompany.id = ${__user__.activeCompany?.id} AND self.mainEmploymentContract.companyDepartment.id = ${id} &quot;"/>
+  </action-attrs>
+</object-views>

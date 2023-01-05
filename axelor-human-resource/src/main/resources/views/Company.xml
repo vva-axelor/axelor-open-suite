@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.0.xsd">
+
+  <form name="company-form" title="Company" model="com.axelor.apps.base.db.Company"
+    id="hr-company-form" extension="true">
+    <extend target="//field[@name='address']">
+      <insert position="after">
+        <field name="headOfCompany" onSelect="action-company-attrs-set-head-of-company-domain"/>
+      </insert>
+    </extend>
+  </form>
+
+  <action-attrs name="action-company-attrs-set-head-of-company-domain">
+    <attribute name="domain" for="headOfCompany"
+      expr="eval: &quot; self.mainEmploymentContract.payCompany.id = ${__user__.activeCompany?.id} &quot;"/>
+  </action-attrs>
+
+</object-views>

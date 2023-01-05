@@ -9,6 +9,9 @@
 
     <one-to-one name="hrConfig" ref="com.axelor.apps.hr.db.HRConfig" title="HR config"
       mappedBy="company"/>
+    <many-to-one name="headOfCompany" title="Head of company"
+      ref="com.axelor.apps.hr.db.Employee"/>
+
   </entity>
 
 </domain-models>

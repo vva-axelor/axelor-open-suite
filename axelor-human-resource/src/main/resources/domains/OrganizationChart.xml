@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_6.0.xsd">
+
+  <module name="human-resource" package="com.axelor.apps.hr.db"/>
+
+  <entity name="OrganizationChart">
+
+    <string name="name" title="Name"/>
+    <date name="date" column="date_val" title="Date"/>
+    <many-to-one name="company" title="Company" ref="com.axelor.apps.base.db.Company"/>
+    <many-to-many name="companyDepartmentSet" title="Company departments"
+      ref="com.axelor.apps.base.db.CompanyDepartment"/>
+
+  </entity>
+
+</domain-models>

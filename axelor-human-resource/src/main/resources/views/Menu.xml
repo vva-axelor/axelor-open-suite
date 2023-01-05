@@ -70,6 +70,15 @@
     <view-param name="search-filters" value="dpae-filters"/>
   </action-view>
 
+  <menuitem name="organization-chart-all" parent="hr-root-emp-mgt"
+    title="Organization charts" action="organization.chart.all"/>
+
+  <action-view name="organization.chart.all" title="Organization charts"
+    model="com.axelor.apps.hr.db.OrganizationChart">
+    <view type="grid" name="organization-chart-grid"/>
+    <view type="form" name="organization-chart-form"/>
+  </action-view>
+
   <menuitem name="hr-root-emp-mgt-conf" parent="hr-root-emp-mgt" title="Configuration"
     icon="fa-cog" order="700"/>
 

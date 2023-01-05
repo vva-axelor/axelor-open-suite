@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_6.0.xsd">
+
+  <grid name="organization-chart-grid" title="Organization charts"
+    model="com.axelor.apps.hr.db.OrganizationChart">
+    <field name="name"/>
+    <field name="date"/>
+    <field name="company"/>
+  </grid>
+
+  <form name="organization-chart-form" title="Organization chart"
+    model="com.axelor.apps.hr.db.OrganizationChart">
+    <panel name="mainPanel">
+      <field name="name"/>
+      <field name="date"/>
+      <field name="company"
+        onChange="action-organization-chart-record-reset-company-department"/>
+      <field name="companyDepartmentSet" widget="TagSelect"
+        onSelect="action-organization-chart-attrs-set-company-department-domain"
+        readonlyIf="!company"/>
+      <button onClick="save,action-organization-chart-view-open-chart" name="openChartBtn"
+        title="Open chart view"/>
+    </panel>
+  </form>
+
+  <action-record name="action-organization-chart-record-reset-company-department"
+    model="com.axelor.apps.hr.db.OrganizationChart">
+    <field name="companyDepartmentSet" expr="eval: null"/>
+  </action-record>
+
+  <action-attrs name="action-organization-chart-attrs-set-company-department-domain">
+    <attribute name="domain" for="companyDepartmentSet"
+      expr="eval: &quot;self.company = :company&quot;"/>
+  </action-attrs>
+
+  <action-view name="action-organization-chart-view-open-chart"
+    title="Organization charts">
+    <view type="html" name="organization-chart/?id={{_id}}"/>
+  </action-view>
+
+</object-views>
