@@ -245,4 +245,7 @@ public final class HumanResourceExceptionMessage {
 
   public static final String EXPENSE_CAN_NOT_DELETE_VENTILATED = /*$$(*/
       "Ventilated expense can not be deleted. %s can not be deleted." /*)*/;
+
+  public static final String INVALID_LEVEL = /*$$(*/
+      "Value should not be less than number of upper managers" /*)*/;
 }

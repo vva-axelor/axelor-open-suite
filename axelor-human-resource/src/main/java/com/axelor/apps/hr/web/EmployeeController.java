@@ -175,4 +175,13 @@ public class EmployeeController {
 
     response.setReload(true);
   }
+
+  public void checkLevel(ActionRequest request, ActionResponse response) {
+    Employee employee = request.getContext().asType(Employee.class);
+    try {
+      Beans.get(EmployeeService.class).checkLevel(employee);
+    } catch (Exception e) {
+      TraceBackService.trace(response, e);
+    }
+  }
 }

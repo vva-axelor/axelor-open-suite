@@ -328,6 +328,7 @@
           <panel colSpan="12">
             <field name="managerUser" canEdit="false" canNew="false" canView="false"
               colSpan="4" form-view="user-form" grid-view="user-grid"/>
+            <field name="level" onChange="action-employee-method-check-level"/>
             <field name="exportCode" colSpan="4"/>
             <field name="bankDetails" colSpan="4" form-view="bank-details-form"
               grid-view="bank-details-grid"
@@ -748,6 +749,10 @@
     <attribute for="user" name="value" expr="eval: contactPartner?.linkedUser"
       if="contactPartner?.linkedUser != null &amp;&amp; contactPartner?.employee == null"/>
   </action-attrs>
+
+  <action-method name="action-employee-method-check-level">
+    <call class="com.axelor.apps.hr.web.EmployeeController" method="checkLevel"/>
+  </action-method>
 
   <search-filters name="employee-filters" model="com.axelor.apps.hr.db.Employee"
     title="Employee filters">

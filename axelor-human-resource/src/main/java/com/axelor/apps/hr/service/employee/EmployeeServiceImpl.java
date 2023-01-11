@@ -245,4 +245,21 @@ public class EmployeeServiceImpl extends UserServiceImpl implements EmployeeServ
         I18n.get(HumanResourceExceptionMessage.NO_USER_FOR_EMPLOYEE),
         employee.getName());
   }
+
+  public void checkLevel(Employee employee) throws AxelorException {
+    if (employee.getLevel() < countLevel(employee, 0)) {
+      throw new AxelorException(
+          TraceBackRepository.CATEGORY_CONFIGURATION_ERROR,
+          I18n.get(HumanResourceExceptionMessage.INVALID_LEVEL));
+    }
+  }
+
+  protected Integer countLevel(Employee employee, Integer level) {
+    if (employee == null || employee.getManagerUser() == null) {
+      return level;
+    } else {
+      level++;
+      return countLevel(employee.getManagerUser().getEmployee(), level);
+    }
+  }
 }
