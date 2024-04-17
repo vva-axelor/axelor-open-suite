@@ -31,11 +31,21 @@
         form-view="project-status-form" domain="self.isCompleted = true"/>
     </panel>
 
+    <panel name="taskStatusMgtPanel" title="Task status management">
+      <field name="completedTaskStatus" grid-view="task-status-grid"
+        form-view="task-status-form"
+        onSelect="action-app-project-attrs-set-completed-task-status-domain"/>
+    </panel>
+
     <panel-mail name="mailPanel">
       <mail-messages limit="4"/>
       <mail-followers/>
     </panel-mail>
   </form>
 
+  <action-attrs name="action-app-project-attrs-set-completed-task-status-domain">
+    <attribute name="domain" for="completedTaskStatus"
+      expr="eval: 'self.isCompleted = true AND self.id IN (' + defaultTaskStatusSet?.collect{ it.id }?.join(',') + ')'"/>
+  </action-attrs>
 
 </object-views>
