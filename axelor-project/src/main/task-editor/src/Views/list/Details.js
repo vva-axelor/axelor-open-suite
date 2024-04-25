@@ -75,7 +75,7 @@ function Details({
   openSnackbar,
   copyToClipboard,
 }) {
-  const { tasks, onCardAdd, onCardEdit, project, userId, maxFiles, refresh, addTaskToBeDeleted } = useTaskEditor();
+  const { tasks, onCardAdd, onCardEdit, project, userId, maxFiles, refresh, addTaskToBeDeleted, taskCompletedStatus = {} } = useTaskEditor();
   const [isDeleteConfirmationDialogOpen, openDeleteConfirmationDialog, closeDeleteConfirmationDialog] = useOpenClose();
   const [isTaskToProjectDialogOpen, openTaskToProjectDialog, closeTaskToProjectDialog] = useOpenClose();
   const [isPdfDialogOpen, openPdfDialog, closePdfDialog] = useOpenClose();
@@ -99,7 +99,7 @@ function Details({
     taskId,
   ]);
 
-  const isCompleted = useMemo(() => getStatus(taskInView, project), [taskInView, project]);
+  const isCompleted = useMemo(() => taskInView && taskInView?.status?.id === taskCompletedStatus?.id, [taskInView, project]);
 
   const projectId = project && project.id;
 
@@ -115,9 +115,9 @@ function Details({
         !taskInView.projectTaskSection || !taskInView.projectTaskSection.id
           ? null
           : {
-              id: taskInView.projectTaskSection.id,
-              $version: taskInView.projectTaskSection.version,
-            },
+            id: taskInView.projectTaskSection.id,
+            $version: taskInView.projectTaskSection.version,
+          },
     });
     if (res) {
       setNewSubtaskId(res.id);
@@ -136,15 +136,17 @@ function Details({
       if (isCompleted) {
         status = taskInView.statusBeforeComplete;
       } else {
-        status = getCompletedStatus(project);
+        status = taskCompletedStatus;
       }
-      let res = await updateTask({
-        ...taskInView,
-        status,
-        statusBeforeComplete: taskInView.status,
-      });
-      if (res) {
-        onCardEdit({ ...res, 'priority.technicalTypeSelect': taskInView['priority.technicalTypeSelect'] });
+      const updatedRecord = await updateTask({ ...taskInView, status, statusBeforeComplete: taskInView.status });
+      if (updatedRecord.status === -1) {
+        openSnackbar({
+          severity: 'error',
+          message: updatedRecord.data.message || "something went wrong"
+        });
+      }
+      else {
+        onCardEdit({ ...updatedRecord, 'priority.technicalTypeSelect': taskInView['priority.technicalTypeSelect'] });
       }
     },
     [onCardEdit, isCompleted, taskInView, project],
@@ -341,6 +343,7 @@ function Details({
       onDrawerClose();
     }
   });
+
   return (
     <React.Fragment>
       {showFullScreen && (

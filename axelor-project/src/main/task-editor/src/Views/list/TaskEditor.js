@@ -33,6 +33,7 @@ import {
   getFilters,
   fetchFields,
   getProject,
+  getTaskStatus,
 } from '../../Services/api';
 import List from './List';
 import { TaskEditorProvider } from './Context';
@@ -166,6 +167,8 @@ function Container(props) {
   const [filter, setFilter] = useState(null);
   const [sortColumn, setSortColumn] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [taskCompletedStatus, setTaskCompletedStatus] = useState(null)
+
   const classes = useStyles();
 
   const userId = info && info['user.id'];
@@ -484,10 +487,10 @@ function Container(props) {
       sections.map(s =>
         s.id === section.id
           ? {
-              ...s,
-              name: section.name,
-              version: section.version,
-            }
+            ...s,
+            name: section.name,
+            version: section.version,
+          }
           : s,
       ),
     );
@@ -523,10 +526,10 @@ function Container(props) {
           section.id === -1
             ? null
             : {
-                id: section.id,
-                $version: section.version,
-                name: section.name,
-              },
+              id: section.id,
+              $version: section.version,
+              name: section.name,
+            },
       });
       if (newTask) {
         setTasks(tasks => [newTask, ...tasks]);
@@ -650,7 +653,7 @@ function Container(props) {
 
   // compute columns from tasks and sections with sort
   useEffect(() => {
-    const $tasks = getFilteredTask(tasks, menuFilterCode, filterCode, { userId, project });
+    const $tasks = getFilteredTask(tasks, menuFilterCode, filterCode, { userId, project }, taskCompletedStatus);
     const columns = getColumns($tasks, sections) || [];
     const { code = 'sequence', sortFunction = sortByKey, fieldName } = sortColumn || {};
     setColumns(_columns =>
@@ -672,6 +675,16 @@ function Container(props) {
       if (selectedTaskId !== toDelete.id || !(openTaskInDrawer || openTaskInFullScreen)) onCardDelete(toDelete.id);
     }
   }, [openTaskInDrawer, openTaskInFullScreen, tasksToBeDeleted, selectedTaskId, onCardDelete]);
+
+
+  useEffect(() => {
+    project &&
+      (async () => {
+        const res= await getTaskStatus(project);
+        setTaskCompletedStatus(res?.status || {} );
+      })()
+  }, [project])
+
 
   return (
     <TaskEditorProvider
@@ -723,6 +736,7 @@ function Container(props) {
       addTaskToBeDeleted={addTaskToBeDeleted}
       removeTaskToBeDeleted={removeTaskToBeDeleted}
       tasksToBeDeleted={tasksToBeDeleted}
+      taskCompletedStatus={taskCompletedStatus}
       {...props}
     >
       <div className={classes.root}>

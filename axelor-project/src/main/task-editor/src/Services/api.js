@@ -312,3 +312,25 @@ export async function getProject(id, options) {
     return res.data[0];
   }
 }
+
+
+
+export async function getTaskStatus(project, currentStatus = {}) {
+  const body = {
+    action: 'action-project-task-record-change-status',
+    model: 'com.axelor.apps.project.db.ProjectTask',
+    data: {
+      "context": {
+        "_typeSelect": "task",
+        "_viewType": "form",
+        "_viewName": "project-task-form",
+        "_views": [],
+        "status": currentStatus,
+        "project": project
+      }
+    },
+  };
+  const url = `ws/action`;
+  const res = await Service.post(url, body)
+  return res?.data[0]?.values;
+}

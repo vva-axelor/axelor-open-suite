@@ -70,7 +70,7 @@ export default function Card({ record, onEdit }) {
   });
   const inputRef = useRef(null);
   const [isCompleted, setCompleted] = useState(false);
-  const { selectedProject, newTaskId, setNewTaskId } = useTaskEditor();
+  const { selectedProject, newTaskId, setNewTaskId, openSnackbar, taskCompletedStatus = {} } = useTaskEditor();
 
   const onChange = React.useCallback(e => {
     e.stopPropagation();
@@ -78,31 +78,32 @@ export default function Card({ record, onEdit }) {
     setState(state => ({ ...state, [name]: value }));
   }, []);
 
-  const toggleStatus = React.useCallback(
-    async e => {
-      e && e.stopPropagation();
-      let status;
-      if (isCompleted) {
-        status = record.statusBeforeComplete;
-      } else {
-        status = getCompletedStatus(selectedProject);
-      }
+
+  const toggleStatus = React.useCallback(async e => {
+    e && e.stopPropagation();
+    let status;
+    if (isCompleted) {
+      status = record.statusBeforeComplete;
+    }
+    else {
+      status = taskCompletedStatus;
+    }
+    const updatedRecord = await updateTask({ ...record, status, statusBeforeComplete: record.status })
+    if (updatedRecord.status === -1) {
+      openSnackbar({
+        severity: 'error',
+        message: updatedRecord.data.message || "something went wrong"
+      });
+    }
+    else {
+      onEdit(updatedRecord)
       setState(state => ({
         ...state,
-        status,
+        status: updatedRecord.status
       }));
-      let res = await updateTask({
-        ...record,
-        status,
-        statusBeforeComplete: record.status,
-      });
-      if (res) {
-        onEdit({ ...res, 'priority.technicalTypeSelect': record['priority.technicalTypeSelect'] });
-      }
-    },
-    [onEdit, record, isCompleted, selectedProject],
-  );
+    }
 
+  }, [onEdit, record, isCompleted, selectedProject],)
   const onBlur = React.useCallback(
     async e => {
       e.stopPropagation();
@@ -119,16 +120,16 @@ export default function Card({ record, onEdit }) {
 
   useEffect(() => {
     setState(record);
-    const isCompleted = getStatus(record, selectedProject);
+    const isCompleted = taskCompletedStatus?.id === record?.status?.id;
     setCompleted(isCompleted);
-  }, [record, selectedProject]);
-
+  }, [record, selectedProject, taskCompletedStatus]);
   useEffect(() => {
     if (newTaskId === record.id && record.name === '') {
       inputRef.current.focus();
       setNewTaskId(null);
     }
   }, [newTaskId, record, setNewTaskId]);
+
 
   return (
     <div className={classes.cardTask}>

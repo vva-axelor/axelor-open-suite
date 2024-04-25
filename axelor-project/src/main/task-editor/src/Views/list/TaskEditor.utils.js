@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import moment from 'moment';
-import { getFormatedDate, getCompletedStatus } from '../../utils';
+import { getFormatedDate } from '../../utils';
 import { COLORS } from '../../constants';
 
 const avatarColor = {};
@@ -38,9 +38,9 @@ export const getAvatarColor = id => {
   }
 };
 
-function menuFilterTasks(tasks, type, { project }) {
+function menuFilterTasks(tasks, type, { project },taskCompletedStatus) {
   let filteredTasks = [...(tasks || [])];
-  let completedStatusId = getCompletedStatus(project).id;
+  let completedStatusId = taskCompletedStatus?.id;
   switch (type) {
     case 'allTasks':
       return filteredTasks;
@@ -94,10 +94,10 @@ function menuFilterTasks(tasks, type, { project }) {
   }
 }
 
-export function getFilteredTask(tasks, type, filter, { userId, project }) {
+export function getFilteredTask(tasks, type, filter, { userId, project },taskCompletedStatus) {
   if (!type) return [];
 
-  const filteredTasks = menuFilterTasks(tasks, type, { project });
+  const filteredTasks = menuFilterTasks(tasks, type, { project },taskCompletedStatus);
   switch (filter) {
     case 'dueNextWeek':
       return filteredTasks.filter(task => moment(task.taskEndDate).isSame(moment().add(8, 'days'), 'week'));
