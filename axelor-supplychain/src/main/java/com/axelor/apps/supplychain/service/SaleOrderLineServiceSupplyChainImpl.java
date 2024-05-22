@@ -49,7 +49,7 @@ import com.axelor.apps.stock.db.StockLocationLine;
 import com.axelor.apps.stock.db.repo.StockLocationRepository;
 import com.axelor.apps.stock.db.repo.StockMoveLineRepository;
 import com.axelor.apps.stock.db.repo.StockMoveRepository;
-import com.axelor.apps.stock.service.StockLocationLineService;
+import com.axelor.apps.stock.service.StockLocationLineFetchService;
 import com.axelor.apps.stock.service.StockLocationService;
 import com.axelor.apps.supplychain.db.repo.SupplyChainConfigRepository;
 import com.axelor.apps.supplychain.model.AnalyticLineModel;
@@ -147,7 +147,7 @@ public class SaleOrderLineServiceSupplyChainImpl extends SaleOrderLineServiceImp
     }
 
     StockLocationLine stockLocationLine =
-        Beans.get(StockLocationLineService.class)
+        Beans.get(StockLocationLineFetchService.class)
             .getStockLocationLine(saleOrder.getStockLocation(), saleOrderLine.getProduct());
 
     if (stockLocationLine == null) {
@@ -164,7 +164,7 @@ public class SaleOrderLineServiceSupplyChainImpl extends SaleOrderLineServiceImp
     }
 
     StockLocationLine stockLocationLine =
-        Beans.get(StockLocationLineService.class)
+        Beans.get(StockLocationLineFetchService.class)
             .getStockLocationLine(saleOrder.getStockLocation(), saleOrderLine.getProduct());
 
     if (stockLocationLine == null) {

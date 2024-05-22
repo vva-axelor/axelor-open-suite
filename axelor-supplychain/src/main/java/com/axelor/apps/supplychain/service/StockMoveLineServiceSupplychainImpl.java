@@ -44,6 +44,7 @@ import com.axelor.apps.stock.db.TrackingNumberConfiguration;
 import com.axelor.apps.stock.db.repo.StockMoveLineRepository;
 import com.axelor.apps.stock.db.repo.StockMoveRepository;
 import com.axelor.apps.stock.db.repo.TrackingNumberRepository;
+import com.axelor.apps.stock.service.StockLocationLineFetchService;
 import com.axelor.apps.stock.service.StockLocationLineHistoryService;
 import com.axelor.apps.stock.service.StockLocationLineService;
 import com.axelor.apps.stock.service.StockMoveLineServiceImpl;
@@ -104,7 +105,8 @@ public class StockMoveLineServiceSupplychainImpl extends StockMoveLineServiceImp
       SupplyChainConfigService supplychainConfigService,
       StockLocationLineHistoryService stockLocationLineHistoryService,
       InvoiceLineRepository invoiceLineRepository,
-      AppSupplychainService appSupplychainService) {
+      AppSupplychainService appSupplychainService,
+      StockLocationLineFetchService stockLocationLineFetchService) {
     super(
         trackingNumberService,
         appBaseService,
@@ -117,7 +119,8 @@ public class StockMoveLineServiceSupplychainImpl extends StockMoveLineServiceImp
         trackingNumberRepo,
         productCompanyService,
         shippingCoefService,
-        stockLocationLineHistoryService);
+        stockLocationLineHistoryService,
+        stockLocationLineFetchService);
     this.accountManagementService = accountManagementService;
     this.priceListService = priceListService;
     this.supplychainBatchRepo = supplychainBatchRepo;
@@ -313,7 +316,7 @@ public class StockMoveLineServiceSupplychainImpl extends StockMoveLineServiceImp
 
         if (stockMoveLine.getTrackingNumber() != null) {
           StockLocationLine stockLocationLine =
-              stockLocationLineService.getDetailLocationLine(
+              stockLocationLineFetchService.getDetailLocationLine(
                   stockLocation, stockMoveLine.getProduct(), stockMoveLine.getTrackingNumber());
 
           if (stockLocationLine != null) {
@@ -327,7 +330,7 @@ public class StockMoveLineServiceSupplychainImpl extends StockMoveLineServiceImp
 
         if (availableQty.compareTo(stockMoveLine.getRealQty()) < 0) {
           StockLocationLine stockLocationLineForProduct =
-              stockLocationLineService.getStockLocationLine(
+              stockLocationLineFetchService.getStockLocationLine(
                   stockLocation, stockMoveLine.getProduct());
 
           if (stockLocationLineForProduct != null) {
@@ -340,7 +343,7 @@ public class StockMoveLineServiceSupplychainImpl extends StockMoveLineServiceImp
         }
       } else {
         StockLocationLine stockLocationLine =
-            stockLocationLineService.getStockLocationLine(
+            stockLocationLineFetchService.getStockLocationLine(
                 stockLocation, stockMoveLine.getProduct());
 
         if (stockLocationLine != null) {

@@ -11,6 +11,7 @@ import com.axelor.apps.stock.db.StockMoveLine;
 import com.axelor.apps.stock.db.TrackingNumber;
 import com.axelor.apps.stock.db.repo.StockMoveLineRepository;
 import com.axelor.apps.stock.db.repo.TrackingNumberRepository;
+import com.axelor.apps.stock.service.StockLocationLineFetchService;
 import com.axelor.apps.stock.service.StockLocationLineHistoryService;
 import com.axelor.apps.stock.service.StockLocationLineService;
 import com.axelor.apps.stock.service.StockMoveToolService;
@@ -45,7 +46,8 @@ public class StockMoveLineProductionServiceImpl extends StockMoveLineServiceSupp
       SupplyChainConfigService supplychainConfigService,
       StockLocationLineHistoryService stockLocationLineHistoryService,
       InvoiceLineRepository invoiceLineRepository,
-      AppSupplychainService appSupplychainService) {
+      AppSupplychainService appSupplychainService,
+      StockLocationLineFetchService stockLocationLineFetchService) {
     super(
         trackingNumberService,
         appBaseService,
@@ -64,7 +66,8 @@ public class StockMoveLineProductionServiceImpl extends StockMoveLineServiceSupp
         supplychainConfigService,
         stockLocationLineHistoryService,
         invoiceLineRepository,
-        appSupplychainService);
+        appSupplychainService,
+        stockLocationLineFetchService);
   }
 
   @Override

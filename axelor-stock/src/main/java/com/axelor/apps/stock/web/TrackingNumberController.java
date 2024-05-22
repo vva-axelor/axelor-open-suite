@@ -22,6 +22,7 @@ import com.axelor.apps.base.AxelorException;
 import com.axelor.apps.stock.db.TrackingNumber;
 import com.axelor.apps.stock.db.repo.TrackingNumberRepository;
 import com.axelor.apps.stock.service.TrackingNumberService;
+import com.axelor.apps.stock.utils.TrackingNumberUtilsService;
 import com.axelor.db.mapper.Mapper;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
@@ -46,7 +47,7 @@ public class TrackingNumberController {
     trackingNumber = Beans.get(TrackingNumberRepository.class).find(trackingNumber.getId());
 
     Set<TrackingNumber> originParentsSet =
-        Beans.get(TrackingNumberService.class).getOriginParents(trackingNumber);
+        Beans.get(TrackingNumberUtilsService.class).getOriginParents(trackingNumber);
 
     response.setValue("originParentTrackingNumberSet", originParentsSet);
   }

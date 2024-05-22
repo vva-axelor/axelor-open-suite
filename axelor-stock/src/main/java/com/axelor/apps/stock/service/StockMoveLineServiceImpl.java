@@ -92,6 +92,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
   protected ProductCompanyService productCompanyService;
   protected ShippingCoefService shippingCoefService;
   protected StockLocationLineHistoryService stockLocationLineHistoryService;
+  protected StockLocationLineFetchService stockLocationLineFetchService;
 
   @Inject
   public StockMoveLineServiceImpl(
@@ -106,7 +107,8 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
       TrackingNumberRepository trackingNumberRepo,
       ProductCompanyService productCompanyService,
       ShippingCoefService shippingCoefService,
-      StockLocationLineHistoryService stockLocationLineHistoryService) {
+      StockLocationLineHistoryService stockLocationLineHistoryService,
+      StockLocationLineFetchService stockLocationLineFetchService) {
     this.trackingNumberService = trackingNumberService;
     this.appBaseService = appBaseService;
     this.appStockService = appStockService;
@@ -119,6 +121,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
     this.productCompanyService = productCompanyService;
     this.shippingCoefService = shippingCoefService;
     this.stockLocationLineHistoryService = stockLocationLineHistoryService;
+    this.stockLocationLineFetchService = stockLocationLineFetchService;
   }
 
   @Override
@@ -1103,7 +1106,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
       StockMoveLine stockMoveLine, StockLocation stockLocation) throws AxelorException {
     Optional<StockLocationLine> stockLocationLine =
         Optional.ofNullable(
-            stockLocationLineService.getStockLocationLine(
+            stockLocationLineFetchService.getStockLocationLine(
                 stockLocation, stockMoveLine.getProduct()));
     BigDecimal priceFromLocation = BigDecimal.ZERO;
     if (stockLocationLine.isPresent()) {
@@ -1424,7 +1427,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
 
         if (stockMoveLine.getTrackingNumber() != null) {
           StockLocationLine stockLocationLine =
-              stockLocationLineService.getDetailLocationLine(
+              stockLocationLineFetchService.getDetailLocationLine(
                   stockLocation, stockMoveLine.getProduct(), stockMoveLine.getTrackingNumber());
 
           if (stockLocationLine != null) {
@@ -1434,7 +1437,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
 
         if (availableQty.compareTo(stockMoveLine.getRealQty()) < 0) {
           StockLocationLine stockLocationLineForProduct =
-              stockLocationLineService.getStockLocationLine(
+              stockLocationLineFetchService.getStockLocationLine(
                   stockLocation, stockMoveLine.getProduct());
 
           if (stockLocationLineForProduct != null) {
@@ -1443,7 +1446,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
         }
       } else {
         StockLocationLine stockLocationLine =
-            stockLocationLineService.getStockLocationLine(
+            stockLocationLineFetchService.getStockLocationLine(
                 stockLocation, stockMoveLine.getProduct());
 
         if (stockLocationLine != null) {
@@ -1554,7 +1557,7 @@ public class StockMoveLineServiceImpl implements StockMoveLineService {
     if (stockLocation.getTypeSelect() != StockLocationRepository.TYPE_VIRTUAL) {
       Optional<StockLocationLine> stockLocationLineOpt =
           Optional.ofNullable(
-              stockLocationLineService.getStockLocationLine(
+              stockLocationLineFetchService.getStockLocationLine(
                   stockLocation, stockMoveLine.getProduct()));
 
       stockLocationLineOpt.ifPresent(
