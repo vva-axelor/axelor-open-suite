@@ -155,20 +155,26 @@ public class BudgetServiceImpl implements BudgetService {
         if (budgetDistribution.getPurchaseOrderLine() != null
             && budgetDistribution.getPurchaseOrderLine().getPurchaseOrder() != null) {
           isPurchase = true;
-          orderDate = budgetDistribution.getPurchaseOrderLine().getPurchaseOrder().getOrderDate();
           statusSelect =
               budgetDistribution.getPurchaseOrderLine().getPurchaseOrder().getStatusSelect();
+          if (statusSelect == PurchaseOrderRepository.STATUS_DRAFT) {
+            continue;
+          }
+          orderDate = budgetDistribution.getPurchaseOrderLine().getPurchaseOrder().getOrderDate();
           amountInvoiced =
               currencyScaleService.getCompanyScaledValue(
                   budget,
                   budgetDistribution.getPurchaseOrderLine().getPurchaseOrder().getAmountInvoiced());
         } else if (budgetDistribution.getSaleOrderLine() != null
             && budgetDistribution.getSaleOrderLine().getSaleOrder() != null) {
+          statusSelect = budgetDistribution.getSaleOrderLine().getSaleOrder().getStatusSelect();
+          if (statusSelect == SaleOrderRepository.STATUS_DRAFT_QUOTATION) {
+            continue;
+          }
           orderDate =
               budgetDistribution.getSaleOrderLine().getSaleOrder().getOrderDate() != null
                   ? budgetDistribution.getSaleOrderLine().getSaleOrder().getOrderDate()
                   : budgetDistribution.getSaleOrderLine().getSaleOrder().getCreationDate();
-          statusSelect = budgetDistribution.getSaleOrderLine().getSaleOrder().getStatusSelect();
           amountInvoiced =
               currencyScaleService.getCompanyScaledValue(
                   budget, budgetDistribution.getSaleOrderLine().getSaleOrder().getAmountInvoiced());
